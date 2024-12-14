@@ -46,16 +46,19 @@ def select_country_form(request):
             #country_sel = cd.get("selected_country")
             #df = pd.read_csv(DATA_FILE)
             #df_meri = pd.read_csv("oship")
-            #file_ = open(os.path.join(settings.BASE_DIR, 'ship2.csv'))
+            #file_ = open(os.path.join(settings.BASE_DIR, 'ship2.csv')) 
             df_meri = pd.read_csv(os.path.join(settings.BASE_DIR, 'ship2.csv'))
-            main ()
+            gdf1_meri, gdf2_meri = main ()
 
+            gdf1_meri_json = gdf1_meri.to_json()
+            gdf2_meri_json = gdf2_meri.to_json()
+            return render(request, "helsintalinn/leaflet_plot.html", {"gdf1_meri_json": gdf1_meri_json, "gdf2_meri_json": gdf2_meri_json})
 
-            fig = create_figure(x, y)
+            #fig = create_figure(x, y)
 
-            response = django.http.HttpResponse(content_type="image/png")
-            FigureCanvas(fig).print_png(response)
-            return response
+            #response = django.http.HttpResponse(content_type="image/png")
+            #FigureCanvas(fig).print_png(response)
+            #return response
 
     else:
         # this is the case when user sees the form for the first time
@@ -83,7 +86,7 @@ def main ():
     df_meri ['intermediate_points'] = [Point(xy) for xy in zip(df_meri['long'], df_meri['lat'] )]
 
     gdf_meri = geopandas.GeoDataFrame(df_meri, geometry='intermediate_points', crs="EPSG:4326")
-    print (gdf_meri.head())
+    #print (gdf_meri.head())
 
 
     gdf_meri["next_lat"] = gdf_meri["lat"].shift(-1)
@@ -116,13 +119,13 @@ def main ():
     gdf1_meri = gdf_meri[gdf_meri["ship"]=="Megastar"]  
     print ("Megastar...")
     print ("Megastar...")
-    print (gdf1_meri.head())
+    #print (gdf1_meri.head())
     print ("Megastar END")
 
     gdf2_meri = gdf_meri[gdf_meri["ship"]=="Star"]
     print ("Star...")
     print ("Star...")
-    print (gdf2_meri.head())
+    #print (gdf2_meri.head())
     print ("Star END")
     
     #df_routeline = helper_bend.set_routeline_s_bend_length_new(df_routeline)   # from väylä
@@ -142,6 +145,8 @@ def main ():
     gdf2_meri.plot(ax=ax, color="brown")  # Star
 
     plt.show()
+
+    return gdf1_meri, gdf2_meri
 
 '''
         file = request.FILES['files']

@@ -1,0 +1,53 @@
+{% load static %}
+{% load leaflet_tags %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Leaflet Ship Plot</title>
+
+    {% leaflet_js %}
+    {% leaflet_css %}
+</head>
+<body>
+    {% leaflet_map "leaflet_ships" %}
+
+    <link rel="stylesheet" href="{% static 'css/leaflet_plot.css' %}" />
+
+    <script defer>
+        window.addEventListener("map:init", function (e) {
+            map = e.detail.map;
+
+            // Unknown problem when passing GeoDataFrame JSON to Django templates that
+            // turns quotation marks into &quot. Quick fix to replace them here.
+            gdf1_meri_json = "{{ gdf1_meri_json }}".replace(/&quot;/g, '"');
+            gdf2_meri_json = "{{ gdf2_meri_json }}".replace(/&quot;/g, '"');
+
+            function coordinatesFromShipJSON(shipJSON) {
+                ship = JSON.parse(shipJSON);
+                console.log(ship);
+                ship_features = ship.features;
+
+                ship_coordinates = [];
+                for (var feature of ship_features) {
+                    ship_coordinates.push(feature.geometry.coordinates);
+                }
+
+                return ship_coordinates;
+            }
+
+            ship1_coordinates = coordinatesFromShipJSON(gdf1_meri_json);
+            ship2_coordinates = coordinatesFromShipJSON(gdf2_meri_json);
+
+            var ship1_polyline = L.polyline(ship1_coordinates, { color: 'red' }).addTo(map);
+            var ship2_polyline = L.polyline(ship2_coordinates, { color: 'red' }).addTo(map);
+
+        }, false);
+
+    </script>
+</body>
+</html>
