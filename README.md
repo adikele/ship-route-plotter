@@ -1,5 +1,7 @@
 
-Installing instructions
+Installing instructions:
+Hello, this is Aditya, the creator of this project.
+I will help guide you set this project up on your machine.
 
 1. create a virtual environment
 2. clone this project: git clone https://github.com/adikele/ship-route-plotter
@@ -12,6 +14,7 @@ To check if the program works successfully:
 --> when the program is run, visit the page http://127.0.0.1:8000/helsintalinn/bargraphs/
 --> choose one of the two radio options 
 --> a partial map of Finland with two routes will appear; these are the partial routes of two ships
+Please write to me at aditya.kelekar@gmail.com for contributions and suggestions. Thank you!
 
 TODO:
 
